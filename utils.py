@@ -1,4 +1,3 @@
-"""System module."""
 import zipfile
 import os.path
 import sys
@@ -85,3 +84,132 @@ def source_directory():
         print("  Directory " , your_source_directory ,  " created. ")
     except FileExistsError:
         print("  Directory " , your_source_directory ,  " already exists. ")
+
+def backup_directory():
+    """Check if backup directory exist, if don't exists, create it."""
+    print(' \n Checking for backup directory ... %s ' %your_backup_directory)
+    if (os.path.exists(your_backup_directory)) and (os.path.isdir(your_backup_directory)):
+        print('  Backup directory found. ')
+        time.sleep(1)
+    else:
+        print(' Backup directory not found ')
+        print(' Creating backup directory ... %s ' %your_backup_directory)
+        try:
+            os.makedir(your_backup_directory)
+            if not os.path.exists(your_backup_log):
+                os.mknod(your_backup_log)
+            f = open(your_backup_log, 'w')
+            f.close()
+            print(' Backup directory successfully created. ')
+            time.sleep(1)
+        except:
+            print(' An error occurred while creating the directory ... ')
+            print(' Try creating the directory %s manually and rerun the script ' %(your_backup_directory))
+            sys.exit(0)
+    f = open(your_backup_log,'a')
+    f.write('%s: info: Backup started by user:%s \n'%(datetime.now().strftime("%d-%m-%Y à %H%M%S"),os.getlogin()))
+    f.close()
+    time.sleep(1)
+
+def deleting_old_backups():
+    max_backup = 5
+    existing_backups = [
+    x for x in your_backup_directory_path.iterdir()
+    if x.is_file() and x.suffix == '.zip' and x.name.startswith('Sauvegarde')]
+    oldest_to_newest_backup_by_name = list(sorted(existing_backups, key=lambda f: f.name))
+    
+    while len(oldest_to_newest_backup_by_name) >= max_backup:  
+        backup_to_delete = oldest_to_newest_backup_by_name.pop(0)
+        backup_to_delete.unlink()
+        print('  Deleting old backups... ')
+        time.sleep(1)
+        
+def backup_to_zip():
+    """Zip your source directory."""
+    print('  The following files and directories will be backuped up. ')
+    backup_file_name = f'Sauvegarde du dossier {your_source_directory_path.name} du {datetime.now().strftime("%d-%m-%Y à %H%M%S")}.zip'
+    zip_file = zipfile.ZipFile(str(your_backup_directory_path / backup_file_name), mode='w', )
+    if your_source_directory_path.is_file():
+    # File backup
+        zip_file.write(
+        your_source_directory_path(),
+        arcname=your_source_directory_path.name,
+        compress_type=zipfile.ZIP_DEFLATED
+    )
+    elif your_source_directory_path.is_dir():
+    # Directory backup
+        for file in your_source_directory_path.glob('**/*'):
+            if file.is_file():
+                zip_file.write(
+                file.absolute(),
+                arcname=str(file.relative_to(your_source_directory_path)),
+                compress_type=zipfile.ZIP_DEFLATED
+                )
+    # Zip processus end
+        zip_file.close()
+    print(' \n  Backup completed successfully \n  Backup stored in %s ' %(your_backup_directory))
+    
+
+def upload_to_aws():
+    """Upload of zip's folder zipped."""
+    connexion = boto.connect_s3(your_aws_access_key_id,
+                            your_aws_access_key_secret,
+                            host=your_region_host)
+    nonexistent = connexion.lookup(your_amazon_bucket)
+    # Check if the bucket exists and initialize connection, if doesn't exists, bucket is create.
+    if nonexistent is None:
+        print ('Bucket doesn t exist. Creating bucket...')
+        bucket = connexion.create_bucket(your_amazon_bucket, location="eu-west-3")
+    else:
+        bucket = connexion.get_bucket(your_amazon_bucket, validate=True)
+    # Start of uploading on S3 bucket.
+    try:
+        upload_file_names = []
+        for root, dirs, files in os.walk(your_backup_directory, topdown=False):
+            for name in files:
+                fname=os.path.join(root, name)
+                upload_file_names.append(fname)
+                print (upload_file_names)
+
+            for filenames in upload_file_names:
+                filename=filenames.replace("\\", "/")
+                sourcepath = filename
+                destpath = filename
+
+            k = boto.s3.key.Key(bucket)
+            k.key = destpath
+#            k.set_contents_from_filename(sourcepath,cb=percent_cb, num_cb=10)
+            print("Upload Successful")
+            return True
+
+    except FileNotFoundError:
+        print("The file was not found")
+        return False
+
+def mailer():
+    """This function sends an email to user with log file."""
+    print('  Sending Mail ... ')
+    f = open(your_backup_log)
+    for line in f.readlines():
+        pass
+    print(line)
+    print('  An email has been sent to you... ')
+    msg = MIMEMultipart()
+    msg['From'] = your_email_address
+    msg['To'] = your_email_address
+    msg['Subject'] = ' S3_Backup LOG Notification '
+    nom_fichier = "backup.log"
+    piece = open(your_backup_log, "rb")
+    part = MIMEBase('application', 'octet-stream')
+    part.set_payload((piece).read())
+    encoders.encode_base64(part)
+    part.add_header('Content-Disposition', "piece; filename= %s" % nom_fichier)
+    msg.attach(part)
+    mailserver = smtplib.SMTP('smtp.gmail.com', 587)
+    mailserver.ehlo()
+    mailserver.starttls()
+    mailserver.ehlo()
+    mailserver.login(your_email_address, your_psw)
+    mailserver.sendmail(your_email_address, your_email_address, msg.as_string())
+    mailserver.quit()
+    
