@@ -40,6 +40,7 @@ Option 6 : this step copies files or directories and puts everything in a single
            
 Option 7 : allows you to upload file/folder on your Amazon S3 Service
 
+![Choice](/image/Sans%20titre1.png?raw=true)
 
 ## How to schedule automatic script execution?
 
