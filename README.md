@@ -3,24 +3,9 @@
 # s3_backup_tool
 
 
-
-     _______. ____      .______        ___        ______  __  ___  __    __  .______      .___________.  ______     ______    __      
-    /       ||___ \     |   _  \      /   \      /      ||  |/  / |  |  |  | |   _  \     |           | /  __  \   /  __  \  |  |     
-   |   (----`  __) |    |  |_)  |    /  ^  \    |  ,----'|  '  /  |  |  |  | |  |_)  |    `---|  |----`|  |  |  | |  |  |  | |  |     
-    \   \     |__ <     |   _  <    /  /_\  \   |  |     |    <   |  |  |  | |   ___/         |  |     |  |  |  | |  |  |  | |  |     
-.----)   |    ___) |    |  |_)  |  /  _____  \  |  `----.|  .  \  |  `--'  | |  |             |  |     |  `--'  | |  `--'  | |  `----.
-|_______/    |____/     |______/  /__/     \__\  \______||__|\__\  \______/  | _|             |__|      \______/   \______/  |_______|
-                                                                                                                                      
-
-
-
-
 ## About.
 
-
-
 This is a simple backup script written in Python 3 and that offers a generic way to backup locally files or directories and to upload backups on Amazon Web Service S3.
-
 
 ## How to install?
 
@@ -65,14 +50,9 @@ Option 7 : allows you to upload file/folder on your Amazon S3 Service
 
 ## Contribution guidelines.
 
-
-
 If you have any idea or suggestion contact directly the Repo Owner.
 
-
 ## License.
-
-
 
 This project is licensed under the MIT License. Please see the LICENSE file for complete license text.
 
