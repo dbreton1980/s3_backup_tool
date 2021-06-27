@@ -17,9 +17,11 @@ This is a simple backup script written in Python 3 and that offers a generic way
 Install the last version of Python : https://www.python.org/ .
 
 s3_backup_tool needs Boto and many dependencies to be installed on your system.
+
 pip install boto
 
 The script requires your AWS credentials :
+
     Access Key ID 
     Access Key Secret
     Region host
