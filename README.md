@@ -34,7 +34,7 @@ Option 2 : allows you to create your target directory at the desired location.
 
 Option 3 : allows you to listed all the buckets on you Amazon S3 Service.
 
-Option 4/5 : allows tou to create and/or remove bucket on you Amazon S3 Service.
+Option 4/5 : allows you to create and/or remove bucket on you Amazon S3 Service.
 
 Option 6 : this step copies files or directories and puts everything in a single .zip file protectd by password. You can choose source file/directory, and source                backup directory. The script checks for each execution, the existence of the source and destination folders.
            Once everything is ready, let's upload the files to your Amazon S3 bucket.
