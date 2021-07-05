@@ -17,7 +17,7 @@ s3_backup_tool needs Boto and many dependencies to be installed on your system.
 pip install boto
 
 
-The script requires your AWS credentials :
+In order to use this script you must set an "AWS access key ID", an "AWS secret access key" and an "AWS Region" that you can create through the IAM service in the AWS console.
 
     Access Key ID 
     Access Key Secret
