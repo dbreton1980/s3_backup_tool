@@ -6,7 +6,7 @@
 
 ## About.
 
-This is a simple backup script written in Python 3 and that offers a generic way to backup locally files or directories and to upload backups on Amazon Web Service S3.
+This is a simple backup script written in Python 3 and that offers a generic way to backup locally files or directories and to upload backups on Amazon Web Service S3. You use AWS (Amazon Web Services) S3 as backup system for desktop environments. Like Dropbox or Google Drive app you can backup your important data on AWS S3.
 
 ## How to install?
 
