@@ -43,12 +43,6 @@ Option 7 : allows you to upload file/folder on your Amazon S3 Service
 
 ![Choice](/image/Sans%20titre1.png?raw=true)
 
-## How to schedule automatic script execution?
-
-• If you have Windows: https://docs.microsoft.com/en-us/windows/win32/taskschd/task-scheduler-start-page
-
-• If you have Linux or Mac: https://www.howtogeek.com/101288/how-to-schedule-tasks-on-linux-an-introduction-to-crontab-files/
-
 
 ## Contribution guidelines.
 
