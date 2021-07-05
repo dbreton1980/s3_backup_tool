@@ -17,7 +17,7 @@ from email.mime.multipart import MIMEMultipart
 def get_all_choices():
     """
     Allows to collect all the parameters necessary for the operation of the backup
-
+    
     Returns
     -------
     choices: dict
@@ -70,7 +70,6 @@ def source_directory(your_source_directory):
     print(' \n Checking for source directory ... %s  ' %your_source_directory)
     time.sleep(1)
     try:
-    # Create the directory if it does not exist
         os.mkdir(your_source_directory)
         print(" Directory ", your_source_directory ," created. \n")
     except FileExistsError:
@@ -88,7 +87,6 @@ def backup_directory(your_backup_directory):
     """
     print('=' * 60)
     print(' \n Checking for backup directory ... %s ' %your_backup_directory)
-    # Check the existence of the directory
     if (os.path.exists(your_backup_directory)) and (os.path.isdir(your_backup_directory)):
         print(" Directory" , your_backup_directory ,  "already exists. \n " )
         time.sleep(1)
@@ -96,7 +94,6 @@ def backup_directory(your_backup_directory):
         print(' Backup directory not found ')
         print(' Creating backup directory ... %s ' %your_backup_directory)
         try:
-        # Create the directory if it does not exist
             os.mkdir(your_backup_directory)
             print(' Backup directory successfully created. \n')
             time.sleep(1)
@@ -121,17 +118,17 @@ def list_bucket(your_aws_access_key_id, your_aws_access_key_secret, your_region_
     your_region_host: str
         Region a given AWS account.
     """
-    # Create a S3 connection
     os.environ['S3_USE_SIGV4'] = 'True'
     connexion = boto.connect_s3(
         your_aws_access_key_id,
         your_aws_access_key_secret,
         host=your_region_host
     )
+    
     buckets = connexion.get_all_buckets()
     print('=' * 60)
     for key in buckets:
-        print(f'Bucket Name:{[key.name]}')
+        print(f'Bucket Name: {key.name}')
     print('=' * 60)
     time.sleep(1)
 
@@ -154,7 +151,6 @@ def create_bucket(your_amazon_bucket, your_aws_access_key_id, your_aws_access_ke
     your_region_host: str
         Region a given AWS account.
     """
-    # Create a S3 connection
     os.environ['S3_USE_SIGV4'] = 'True'
     connexion = boto.connect_s3(
         your_aws_access_key_id,
@@ -197,7 +193,6 @@ def remove_bucket(your_amazon_bucket, your_aws_access_key_id, your_aws_access_ke
         Region a given AWS account.your_amazon_bucket: str
         AWS bucket name.
     """
-    # Create a S3 connection
     os.environ['S3_USE_SIGV4'] = 'True'
     session = boto3.Session(your_aws_access_key_id, your_aws_access_key_secret)
     s3 = session.resource(service_name='s3')
@@ -241,10 +236,7 @@ def backup_to_zip(your_source_directory, your_backup_directory, your_backup_log,
     print(message_start)
     print('=' * 60)
     backup_file_name = f'Sauvegarde du dossier {your_source_directory_path.name} du {datetime.now().strftime("%d-%m-%Y à %H%M%S")}.zip'
-    zf = pyzipper.AESZipFile((your_backup_directory_path / backup_file_name),
-                              mode='w',
-                              compression = pyzipper.ZIP_LZMA,
-                              encryption = pyzipper.WZ_AES)
+    zf = pyzipper.AESZipFile((your_backup_directory_path / backup_file_name), mode='w', compression = pyzipper.ZIP_LZMA, encryption = pyzipper.WZ_AES)
     zf.pwd = your_password.encode()
     if your_source_directory_path.is_file():
     # File backup
@@ -262,9 +254,9 @@ def backup_to_zip(your_source_directory, your_backup_directory, your_backup_log,
                 compress_type=pyzipper.ZIP_LZMA)
     # Zip processus end
         zf.close()
-    f = open(your_backup_log,'r+')
-    f.write(' %s: info: Backup completed successfully \n'%(datetime.now().strftime("%d-%m-%Y à %H%M%S")))
-    f.close()
+    if not os.path.exists(your_backup_log):
+        with open(your_backup_log, 'w') as f:
+            f.write(' %s: info: Backup completed successfully \n'%(datetime.now().strftime("%d-%m-%Y à %H%M%S")))
     time.sleep(1)
     print('=' * 60)
     print(' \n Backup completed successfully \n Backup stored in %s \n' %(your_backup_directory))
@@ -274,7 +266,7 @@ def backup_to_zip(your_source_directory, your_backup_directory, your_backup_log,
     print('=' * 60)
 
 
-def upload_to_aws(your_backup_directory, your_amazon_bucket, your_aws_access_key_id, your_aws_access_key_secret, your_region_host):
+def upload_to_aws(your_backup_directory,your_backup_log, your_amazon_bucket, your_aws_access_key_id, your_aws_access_key_secret, your_region_host):
     """
     Upload directory on AWS S3 bucket.
 
@@ -327,6 +319,9 @@ def upload_to_aws(your_backup_directory, your_amazon_bucket, your_aws_access_key
                 k = boto.s3.key.Key(bucket)
                 k.key = destpath
                 k.set_contents_from_filename(sourcepath)
+                f = open(your_backup_log,'a')
+                f.write(' %s: info: Amazon S3 Upload completed successfully \n'%(datetime.now().strftime("%d-%m-%Y à %H%M%S")))
+                f.close()
                 print(" Upload Successful ".center(60,'='))
                 message_end = " Amazon S3 backup terminated with success ".center(60,'=')
                 print(message_end)
