@@ -43,6 +43,8 @@ Option 7 : allows you to upload file/folder on your Amazon S3 Service
 
 ![Choice](/image/Sans%20titre1.png?raw=true)
 
+![Choice](/image/Sans%20titre3.png?raw=true)
+
 
 ## Contribution guidelines.
 
